@@ -10,6 +10,7 @@ import {
   locateSegments,
   SEGMENT_SPLIT_CHARS,
   SEGMENT_TARGET_CHARS,
+  snippetAround,
 } from "../lib/segments.js";
 
 let pass = 0;
@@ -129,6 +130,44 @@ check("定位：结果按分数降序", (() => {
   return true;
 })());
 
+/* ── 命中片段：预览必须围绕命中词，而不是固定截段开头 ──
+   实测踩过的坑：一条 532 字的段里 font_*.png / click_font / 路径都在，
+   但预览固定截前 80 字，显示的全是开头的一句闲聊 —— 模型据此判断
+   「词碰上了、内容没对上」，于是跳过 memory_detail，白白浪费一次已经成功的定位。 */
+
+check("命中片段：关键词在段中后部时也能一眼看到", (() => {
+  const filler = "前面是一段与查询无关的闲聊内容。".repeat(12);
+  const tail = "后面还有一段与查询无关的收尾内容。".repeat(12);
+  const snip = snippetAround(filler + "文件在 E:/DSHwork/桌宠/font_*.png 这里。" + tail, ["font_*.png"]);
+  return snip.includes("font_*.png") && snip.startsWith("…") && snip.endsWith("…") && snip.length < 200;
+})());
+
+check("命中片段：词在段首时不加前省略号", (() => {
+  const snip = snippetAround("font_*.png 就在开头。" + "补".repeat(300), ["font_*.png"]);
+  return snip.startsWith("…") === false && snip.includes("font_*.png");
+})());
+
+check("命中片段：多个词时围绕最先出现的那个", (() => {
+  const text = "甲".repeat(200) + "第一个词" + "乙".repeat(200) + "第二个词" + "丙".repeat(200);
+  const snip = snippetAround(text, ["第二个词", "第一个词"]);
+  return snip.includes("第一个词") && snip.includes("第二个词") === false;
+})());
+
+check("命中片段：大小写不敏感、换行压成空格", (() => {
+  const snip = snippetAround("x".repeat(80) + "\n\nFONT_*.PNG\n\n" + "y".repeat(80), ["font_*.png"]);
+  return snip.toLowerCase().includes("font_*.png") && snip.includes("\n") === false;
+})());
+
+check("命中片段：坏输入不炸", snippetAround(null, ["a"]) === "" && snippetAround("", ["a"]) === "" &&
+  typeof snippetAround("abc", null) === "string" && snippetAround("abc", ["zzz"]).length > 0);
+
+check("定位：命中段的 preview 围绕命中词（本次 bug 的回归网）", (() => {
+  const detail = "无关开头。".repeat(20) + "这里有 click_font*.py 的路径 " + "无关结尾。".repeat(20);
+  const text = "## 引言\n" + "填充内容。".repeat(60) + "\n\n## 细节\n" + detail + "\n\n## 收尾\n" + "填充内容。".repeat(60);
+  const located = locateSegments(segmentText(text), "click_font", 5);
+  return located.length >= 1 && located[0].preview.includes("click_font") && located[0].hits.includes("click_font");
+})());
+
 /* ── 结果 ── */
 
 console.log("段级引索层单测：" + String(pass) + " 通过 / " + String(failures.length) + " 失败");
@@ -138,3 +177,4 @@ if (failures.length > 0) {
 } else {
   console.log("  ✓ 全部通过");
 }
+

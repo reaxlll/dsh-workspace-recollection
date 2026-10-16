@@ -2,3 +2,6 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+
+# 外部审查报告（过程文档，不属于产品本身）
+CODE_REVIEW.md
