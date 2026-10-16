@@ -1,0 +1,37 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 下限对齐 package.json 的 engines（>=22.12.0），另外跑一个当前版本
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      # 单测是零依赖的（纯函数模块不 import 任何东西），所以不需要 npm ci
+      - name: Run unit tests
+        run: npm test
+
+  types:
+    name: type check (tsc --checkJs)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      # 类型检查需要 typescript 与 @types/node（见 devDependencies）
+      - run: npm install --no-audit --no-fund
+      - name: Type check
+        run: npm run typecheck

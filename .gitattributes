@@ -1,0 +1,8 @@
+# 一律按 LF 入库：避免 Windows / macOS / Linux 协作时的换行符噪音
+* text=auto eol=lf
+
+# 明确二进制（将来若加素材，别让 git 试图转换）
+*.png binary
+*.jpg binary
+*.webp binary
+*.onnx binary

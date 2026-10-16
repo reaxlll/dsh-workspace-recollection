@@ -1,0 +1,80 @@
+{
+  "name": "dsh-workspace-recollection",
+  "version": "2.5.0",
+  "description": "给 DeepSeek Harness 的跨会话记忆：按工作区隔离、跨会话共享的长期记忆。常驻 prompt 的只有浅层要点，长文用段级引索定位到段、只取那一段，深层原文（当时的思考、命令、结论）留在本地向量库里按需取回。检索自带噪音过滤与时间通道，零联网（本地嵌入模型），不改动官方内核。",
+  "icon": "assets/icon.svg",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "memory",
+    "long-term-memory",
+    "cross-session",
+    "semantic-search",
+    "embeddings",
+    "rag",
+    "cordis"
+  ],
+  "homepage": "https://github.com/reaxlll/dsh-workspace-recollection#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reaxlll/dsh-workspace-recollection.git"
+  },
+  "bugs": {
+    "url": "https://github.com/reaxlll/dsh-workspace-recollection/issues"
+  },
+  "author": "reaxlll",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "assets/icon.svg",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test tests/noise.test.mjs tests/timehint.test.mjs tests/segments.test.mjs tests/model.test.mjs tests/migrate.test.mjs tests/vector-codec.test.mjs tests/lock.test.mjs tests/store-logic.test.mjs tests/sessions.test.mjs"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": ">=22.0.0",
+    "typescript": ">=5.5.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.3.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-home-paths": ">=0.2.0-rc.1 <0.3.0-0",
+    "@deepseek-ai/dsh-tools": ">=0.2.0-rc.1 <0.3.0-0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "compatibility": {
+      "dshReleases": {
+        "0.1.7-rc.2": "incompatible",
+        "0.2.0-rc.2": "compatible"
+      }
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-modules"
+      ]
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Node 与 DOM 的全局（process / Buffer / window）由 @types/node 与 lib.dom 提供
+    "types": ["node"],
+
+    // 这两条是关键：本项目是纯 JavaScript，不写类型标注。
+    // 打开 noImplicitAny 会淹没在「参数隐式 any」的噪音里（实测 600+ 条），
+    // 关掉之后剩下的才是真问题 —— JSDoc 与实际实现不符、字段拼错、类型收窄失效。
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    // catch 里写 `error.message` 是本项目一贯的风格；打开这条会让每处 catch 都报 unknown
+    "useUnknownInCatchVariables": false
+  },
+  "include": ["lib/**/*.js", "types/**/*.d.ts"]
+}

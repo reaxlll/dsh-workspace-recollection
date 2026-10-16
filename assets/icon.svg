@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="dsh-session-memory">
+  <defs>
+    <linearGradient id="smem" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4f8cff"/>
+      <stop offset="1" stop-color="#26c6a6"/>
+    </linearGradient>
+  </defs>
+  <!-- 三层：浅层要点 / 段级引索 / 深层原文 —— 越往下越「厚」，但都能被定位到 -->
+  <rect x="8"  y="11" width="48" height="11" rx="5.5" fill="url(#smem)" opacity="0.95"/>
+  <rect x="12" y="26" width="40" height="11" rx="5.5" fill="url(#smem)" opacity="0.68"/>
+  <rect x="16" y="41" width="32" height="11" rx="5.5" fill="url(#smem)" opacity="0.42"/>
+  <!-- 定位点：从散落的记忆里被精确取回的那一处 -->
+  <circle cx="32" cy="16.5" r="2.6" fill="#ffffff"/>
+</svg>

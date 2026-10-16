@@ -1,0 +1,3 @@
+- insert:
+    - id: session-memory
+      name: 'dsh-workspace-recollection'
