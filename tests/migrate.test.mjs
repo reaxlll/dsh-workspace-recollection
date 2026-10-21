@@ -9,6 +9,7 @@ import {
   backupName,
   pickBackupsToKeep,
   resolveOnRead,
+  injectOffAllWorkspaces,
   STORE_MIGRATIONS,
   VECTOR_MIGRATIONS,
 } from "../lib/migrate.js";
@@ -61,9 +62,46 @@ test("迁移：传进来的不是 Map 也不炸（按空链处理）", () => {
   assert.equal(plan.reason, "missing");
 });
 
-test("内置迁移链此刻为空 —— 因为 v3 / v2 就是当前版本", () => {
-  assert.equal(STORE_MIGRATIONS.size, 0);
-  assert.equal(VECTOR_MIGRATIONS.size, 0);
+test("内置迁移链：store v3 → v4 把所有工作区的 injectMode 置为 off（浅层零注入）", () => {
+  assert.equal(VECTOR_MIGRATIONS.size, 0, "向量层这一轮没动");
+  assert.equal(STORE_MIGRATIONS.size, 1);
+  assert.equal(typeof STORE_MIGRATIONS.get(3), "function");
+
+  const raw = {
+    version: 3,
+    budgetChars: 6000,
+    workspaces: {
+      "e:\\dshwork\\插件生成": { cwd: "E:\\DSHwork\\插件生成", enabled: true, injectMode: "full", entries: [{ id: "a" }] },
+      "e:\\claude": { cwd: "E:\\Claude", enabled: true, injectMode: "index", entries: [] },
+    },
+  };
+  const decision = resolveOnRead(raw, 4, STORE_MIGRATIONS, "memory.json");
+  assert.equal(decision.verdict, "migrate");
+  assert.equal(decision.readOnly, false, "迁移链齐全就不该进只读保护");
+  assert.match(decision.notice, /v3 迁移到 v4/);
+  assert.equal(decision.value.workspaces["e:\\dshwork\\插件生成"].injectMode, "off", "full → off");
+  assert.equal(decision.value.workspaces["e:\\claude"].injectMode, "off", "index → off");
+  // 其余数据一字不动
+  assert.equal(decision.value.budgetChars, 6000);
+  assert.equal(decision.value.workspaces["e:\\dshwork\\插件生成"].entries.length, 1);
+  assert.equal(raw.workspaces["e:\\claude"].injectMode, "index", "入参不许被改（纯函数）");
+});
+
+test("迁移只跑一次：已经是 v4 的数据不会被再次重置成 off（主人在面板里切回 full 是有效的）", () => {
+  const raw = { version: 4, workspaces: { k: { cwd: "K", injectMode: "full", entries: [] } } };
+  const decision = resolveOnRead(raw, 4, STORE_MIGRATIONS, "memory.json");
+  assert.equal(decision.verdict, "same");
+  assert.equal(decision.value.workspaces.k.injectMode, "full");
+});
+
+test("迁移函数本身：坏输入不炸、缺字段也返回对象", () => {
+  assert.deepEqual(injectOffAllWorkspaces(null), { workspaces: {} });
+  assert.deepEqual(injectOffAllWorkspaces({ version: 3 }), { version: 3, workspaces: {} });
+  assert.deepEqual(injectOffAllWorkspaces({ workspaces: { k: null } }), { workspaces: { k: null } }, "坏条目原样留着，交给 normalize 兜");
+  assert.deepEqual(
+    injectOffAllWorkspaces({ workspaces: { k: { injectMode: "full", cwd: "K" } } }),
+    { workspaces: { k: { injectMode: "off", cwd: "K" } } },
+  );
 });
 
 /* ── 备份 ─────────────────────────────────────────────────── */

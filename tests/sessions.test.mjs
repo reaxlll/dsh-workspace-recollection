@@ -149,9 +149,15 @@ test("渲染：总长超过 maxChars 时截断，并明确标注", () => {
   assert.match(text, /本条超长，已截断/);
 });
 
-test("渲染：时间戳按 UTC 渲染到分钟", () => {
-  const text = renderSegment(seg({ time: Date.UTC(2026, 9, 16, 13, 30) }), "s", "digest", 20000);
-  assert.match(text, /2026-10-16 13:30/);
+test("渲染：时间戳按传入的时区渲染到分钟", () => {
+  const when = Date.UTC(2026, 9, 16, 13, 30);
+  // 显式给时区（这条用例钉的就是「UTC 串 + 时区 = 本地钟点」）
+  assert.match(renderSegment(seg({ time: when }), "s", "digest", 20000, "UTC"), /2026-10-16 13:30/);
+  assert.match(renderSegment(seg({ time: when }), "s", "digest", 20000, "Asia/Shanghai"), /2026-10-16 21:30/);
+  // 不给时区 = 本机本地（旧行为，但不再是 UTC）
+  const local = renderSegment(seg({ time: when }), "s", "digest", 20000);
+  const localText = String(new Date(when).getHours()).padStart(2, "0") + ":" + String(new Date(when).getMinutes()).padStart(2, "0");
+  assert.match(local, new RegExp("2026-10-16 " + localText));
 });
 
 test("渲染：time 为 0 时不渲染时间（老数据没有时间戳）", () => {
