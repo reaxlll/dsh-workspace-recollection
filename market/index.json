@@ -1,0 +1,74 @@
+{
+  "format": 1,
+  "title": {
+    "en": "reaxlll plugins",
+    "zh": "reaxlll 的 DSH 插件"
+  },
+  "description": {
+    "en": "Small, self-contained plugins for DeepSeek Harness. No core patches.",
+    "zh": "给 DeepSeek Harness 的小而自包含的插件，不改动官方内核。"
+  },
+  "metadata": {
+    "categories": {
+      "memory": {
+        "title": {
+          "en": "Memory",
+          "zh": "记忆"
+        }
+      }
+    },
+    "labels": {
+      "local": {
+        "title": {
+          "en": "Runs locally",
+          "zh": "本地运行"
+        }
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "dsh-workspace-recollection",
+      "title": {
+        "en": "Workspace Recollection",
+        "zh": "跨会话记忆"
+      },
+      "description": {
+        "en": "Cross-session long-term memory, isolated per workspace: one prompt line points at the memory tools; directory, segment locator and vector store are read on demand.",
+        "zh": "按工作区隔离的跨会话长期记忆：prompt 里只放一行指向记忆工具的提示，目录、段级定位与向量库全部按需读取。"
+      },
+      "icon": "https://github.com/reaxlll/dsh-workspace-recollection/raw/main/assets/icon.svg",
+      "author": "reaxlll",
+      "homepage": "https://github.com/reaxlll/dsh-workspace-recollection#readme",
+      "repository": {
+        "url": "https://github.com/reaxlll/dsh-workspace-recollection"
+      },
+      "metadata": {
+        "category": "memory",
+        "labels": [
+          "local"
+        ],
+        "keywords": [
+          "memory",
+          "跨会话记忆",
+          "语义检索",
+          "embeddings"
+        ]
+      },
+      "versions": [
+        {
+          "version": "2.8.0",
+          "publishTimestamp": 1792668963,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/reaxlll/dsh-workspace-recollection",
+            "commit": "59883312109ab64ab1948d6ed6a9385e77b2c381"
+          },
+          "engines": {
+            "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+          }
+        }
+      ]
+    }
+  ]
+}
