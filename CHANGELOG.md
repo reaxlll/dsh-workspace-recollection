@@ -1,5 +1,21 @@
 # 更新日志
 
+## 2.8.0
+
+### 工具层「先看一眼记忆」守卫
+
+v2.7 那一行常驻提示只提高了「想起来去查」的概率，没有提供保证 —— 实测里模型（我）照样先翻了二十几条命令，
+而目录一眼就能看到答案。提示词管不住最短路径，只能把路堵上。
+
+- 新增 `lib/first-look.js`（纯函数、零依赖）：每个会话**第一次**调 `pwsh` / `bash` / `read` / `glob` / `grep` / `run_code` 时，
+  如果本会话还没调过 `memory_index` / `memory_recall` / `memory_search` / `memory_detail` / `memory_locate` / `session_read`，
+  就 `deny` 一次并在理由里指路；被拦过之后一定放行（绝不卡死）。
+- 只拦探索型工具：写文件、登记任务、present 一律不管；拿不到 sessionId 就放行。
+- `status` 的 `tools.firstLook` 暴露 denied / allowed / skipped / reminded / passed 五个计数，一眼看出守卫是否在干活。
+- 10 条单测（工具清单、拦一次、放行、跨会话隔离、坏输入、文案指路、status 快照）。
+
+结论：**存在感靠常驻（一行够），行为约束靠代码（一行都不需要）。**
+
 ## 2.7.0
 
 ### 从「零注入」改回「一行提示」（hint 档）

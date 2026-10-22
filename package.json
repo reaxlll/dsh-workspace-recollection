@@ -1,7 +1,7 @@
 {
   "name": "dsh-workspace-recollection",
-  "version": "2.7.0",
-  "description": "给 DeepSeek Harness 的跨会话记忆：按工作区隔离、跨会话共享的长期记忆。默认只往 system prompt 里注入一行提示（告诉模型「你有其他会话的记忆」并指向 memory_index / memory_recall），目录、要点、原文全部走工具按需取；长文用段级引索定位到段、只取那一段，深层原文（当时的思考、命令、结论）留在本地向量库里按需取回。检索自带噪音过滤与时间通道（时间轴按首次安装检测到的时区显示），零联网（本地嵌入模型），不改动官方内核。",
+  "version": "2.8.0",
+  "description": "给 DeepSeek Harness 的跨会话记忆：按工作区隔离、跨会话共享的长期记忆。默认只往 system prompt 里注入一行提示（告诉模型「你有其他会话的记忆」并指向 memory_index / memory_recall），并且带一道工具层守卫 —— 每个会话第一次调 pwsh / read / glob 这类探索工具前，若还没查过记忆就先拦一次（只拦一次，不会卡死），目录、要点、原文全部走工具按需取；长文用段级引索定位到段、只取那一段，深层原文（当时的思考、命令、结论）留在本地向量库里按需取回。检索自带噪音过滤与时间通道（时间轴按首次安装检测到的时区显示），零联网（本地嵌入模型），不改动官方内核。",
   "icon": "assets/icon.svg",
   "keywords": [
     "dsh",
@@ -41,7 +41,7 @@
   ],
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
-    "test": "node --test tests/noise.test.mjs tests/timehint.test.mjs tests/segments.test.mjs tests/model.test.mjs tests/migrate.test.mjs tests/vector-codec.test.mjs tests/lock.test.mjs tests/store-logic.test.mjs tests/sessions.test.mjs tests/localtime.test.mjs"
+    "test": "node --test tests/noise.test.mjs tests/timehint.test.mjs tests/segments.test.mjs tests/model.test.mjs tests/migrate.test.mjs tests/vector-codec.test.mjs tests/lock.test.mjs tests/store-logic.test.mjs tests/sessions.test.mjs tests/localtime.test.mjs tests/first-look.test.mjs"
   },
   "license": "MIT",
   "devDependencies": {
