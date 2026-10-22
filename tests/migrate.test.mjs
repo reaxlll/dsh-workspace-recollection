@@ -10,6 +10,7 @@ import {
   pickBackupsToKeep,
   resolveOnRead,
   injectOffAllWorkspaces,
+  injectHintAllWorkspaces,
   STORE_MIGRATIONS,
   VECTOR_MIGRATIONS,
 } from "../lib/migrate.js";
@@ -64,8 +65,9 @@ test("迁移：传进来的不是 Map 也不炸（按空链处理）", () => {
 
 test("内置迁移链：store v3 → v4 把所有工作区的 injectMode 置为 off（浅层零注入）", () => {
   assert.equal(VECTOR_MIGRATIONS.size, 0, "向量层这一轮没动");
-  assert.equal(STORE_MIGRATIONS.size, 1);
+  assert.equal(STORE_MIGRATIONS.size, 2, "v3→v4（零注入）+ v4→v5（一行提示）");
   assert.equal(typeof STORE_MIGRATIONS.get(3), "function");
+  assert.equal(typeof STORE_MIGRATIONS.get(4), "function");
 
   const raw = {
     version: 3,
@@ -92,6 +94,37 @@ test("迁移只跑一次：已经是 v4 的数据不会被再次重置成 off（
   const decision = resolveOnRead(raw, 4, STORE_MIGRATIONS, "memory.json");
   assert.equal(decision.verdict, "same");
   assert.equal(decision.value.workspaces.k.injectMode, "full");
+});
+
+test("内置迁移链：store v4 → v5 把所有工作区从 off 改成 hint（一行提示）", () => {
+  const raw = {
+    version: 4,
+    workspaces: {
+      "e:\\a": { cwd: "E:\\A", injectMode: "off", entries: [{ id: "x" }] },
+      "e:\\b": { cwd: "E:\\B", injectMode: "off", enabled: false, entries: [] },
+    },
+  };
+  const decision = resolveOnRead(raw, 5, STORE_MIGRATIONS, "memory.json");
+  assert.equal(decision.verdict, "migrate");
+  assert.equal(decision.readOnly, false);
+  assert.match(decision.notice, /v4 迁移到 v5/);
+  assert.equal(decision.value.workspaces["e:\\a"].injectMode, "hint");
+  assert.equal(decision.value.workspaces["e:\\b"].injectMode, "hint");
+  assert.equal(decision.value.workspaces["e:\\a"].entries.length, 1, "条目不许丢");
+  assert.equal(raw.workspaces["e:\\a"].injectMode, "off", "入参不许被改（纯函数）");
+});
+
+test("v4 → v5 也只跑一次：v5 数据里手动切 off 不会被改回 hint", () => {
+  const raw = { version: 5, workspaces: { k: { cwd: "K", injectMode: "off", entries: [] } } };
+  const decision = resolveOnRead(raw, 5, STORE_MIGRATIONS, "memory.json");
+  assert.equal(decision.verdict, "same");
+  assert.equal(decision.value.workspaces.k.injectMode, "off");
+});
+
+test("injectHintAllWorkspaces：坏输入不炸", () => {
+  assert.deepEqual(injectHintAllWorkspaces(null), { workspaces: {} });
+  assert.deepEqual(injectHintAllWorkspaces({ workspaces: { k: null } }), { workspaces: { k: null } });
+  assert.deepEqual(injectHintAllWorkspaces({ workspaces: { k: { injectMode: "off", cwd: "K" } } }), { workspaces: { k: { injectMode: "hint", cwd: "K" } } });
 });
 
 test("迁移函数本身：坏输入不炸、缺字段也返回对象", () => {
