@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="906" viewBox="0 0 1240 906" font-family="-apple-system, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif">
+<rect width="1240" height="906" fill="#FFFFFF"/>
+<text x="40" y="36" font-size="19" font-weight="700" fill="#16324A">dsh-workspace-recollection 工作原理</text>
+<text x="40" y="58" font-size="12" fill="#7A8FA3">一张图看懂：记忆从哪来、存在哪、怎么被找回来</text>
+<rect x="30" y="436" width="150" height="68" rx="10" fill="#16324A"/>
+<text x="105" y="464" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">工作区记忆</text>
+<text x="105" y="484" font-size="11" fill="#A9BECE" text-anchor="middle">按工作区隔离</text>
+<path d="M180,470 C213,470 213,110 246,110" fill="none" stroke="#5C9E78" stroke-width="1.6" opacity="0.55"/>
+<rect x="246" y="92" width="92" height="36" rx="8" fill="#F4FAF6" stroke="#5C9E78" stroke-width="1.5"/>
+<text x="292" y="115" font-size="14" font-weight="700" fill="#16324A" text-anchor="middle">存储</text>
+<path d="M338,110 C353,110 353,59 368,59" fill="none" stroke="#5C9E78" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="59" r="3" fill="#5C9E78" opacity="0.7"/>
+<text x="384" y="63.5" font-size="12.5" fill="#334B60">memory.json —— 本体：正文 / 要点 / 标签 / 锚点 / 覆盖链</text>
+<path d="M338,110 C353,110 353,93 368,93" fill="none" stroke="#5C9E78" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="93" r="3" fill="#5C9E78" opacity="0.7"/>
+<text x="384" y="97.5" font-size="12.5" fill="#334B60">vectors.json —— 浅层与深层两级向量（base64 float32）</text>
+<path d="M338,110 C353,110 353,127 368,127" fill="none" stroke="#5C9E78" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="127" r="3" fill="#5C9E78" opacity="0.7"/>
+<text x="384" y="131.5" font-size="12.5" fill="#334B60">Memory.md —— 工作区索引，MANUAL 手记块原样保留</text>
+<path d="M338,110 C353,110 353,161 368,161" fill="none" stroke="#5C9E78" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="161" r="3" fill="#5C9E78" opacity="0.7"/>
+<text x="384" y="165.5" font-size="12.5" fill="#334B60">backups/ —— 每次迁移前的快照，只留最近 5 份</text>
+<path d="M180,470 C213,470 213,280 246,280" fill="none" stroke="#4A7FB5" stroke-width="1.6" opacity="0.55"/>
+<rect x="246" y="262" width="92" height="36" rx="8" fill="#F7FAFD" stroke="#4A7FB5" stroke-width="1.5"/>
+<text x="292" y="285" font-size="14" font-weight="700" fill="#16324A" text-anchor="middle">写入</text>
+<path d="M338,280 C353,280 353,229 368,229" fill="none" stroke="#4A7FB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="229" r="3" fill="#4A7FB5" opacity="0.7"/>
+<text x="384" y="233.5" font-size="12.5" fill="#334B60">抽可判别串 —— 版本号 / 路径 / 端口 / 文件名（只用于排序）</text>
+<path d="M338,280 C353,280 353,263 368,263" fill="none" stroke="#4A7FB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="263" r="3" fill="#4A7FB5" opacity="0.7"/>
+<text x="384" y="267.5" font-size="12.5" fill="#334B60">落覆盖链 —— supersedes 指向旧版，旧版降权 0.55 但不删</text>
+<path d="M338,280 C353,280 353,297 368,297" fill="none" stroke="#4A7FB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="297" r="3" fill="#4A7FB5" opacity="0.7"/>
+<text x="384" y="301.5" font-size="12.5" fill="#334B60">嵌入（同步） —— 写完当场就能被检索到</text>
+<path d="M338,280 C353,280 353,331 368,331" fill="none" stroke="#4A7FB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="331" r="3" fill="#4A7FB5" opacity="0.7"/>
+<text x="384" y="335.5" font-size="12.5" fill="#334B60">摘要（异步队列） —— 失败就退回规则摘要，不阻塞写入</text>
+<path d="M180,470 C213,470 213,470 246,470" fill="none" stroke="#7A6BB5" stroke-width="1.6" opacity="0.55"/>
+<rect x="246" y="452" width="92" height="36" rx="8" fill="#F8F6FD" stroke="#7A6BB5" stroke-width="1.5"/>
+<text x="292" y="475" font-size="14" font-weight="700" fill="#16324A" text-anchor="middle">检索</text>
+<path d="M338,470 C353,470 353,368 368,368" fill="none" stroke="#7A6BB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="368" r="3" fill="#7A6BB5" opacity="0.7"/>
+<text x="384" y="372.5" font-size="12.5" fill="#334B60">① 时间通道 —— 认出「昨天 / 10月6日」就按日历日直筛</text>
+<path d="M338,470 C353,470 353,402 368,402" fill="none" stroke="#7A6BB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="402" r="3" fill="#7A6BB5" opacity="0.7"/>
+<text x="384" y="406.5" font-size="12.5" fill="#334B60">② 候选池 —— 主池 100 条；问「某次会话」时放宽到全部</text>
+<path d="M338,470 C353,470 353,436 368,436" fill="none" stroke="#7A6BB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="436" r="3" fill="#7A6BB5" opacity="0.7"/>
+<text x="384" y="440.5" font-size="12.5" fill="#334B60">③ 向量打分 —— 浅层 + 深层，scoreEntry 决定深层有没有资格</text>
+<path d="M338,470 C353,470 353,470 368,470" fill="none" stroke="#7A6BB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="470" r="3" fill="#7A6BB5" opacity="0.7"/>
+<text x="384" y="474.5" font-size="12.5" fill="#334B60">④ 排序增强 —— 词法 RRF 与向量名次融合（重排默认关）</text>
+<path d="M338,470 C353,470 353,504 368,504" fill="none" stroke="#7A6BB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="504" r="3" fill="#7A6BB5" opacity="0.7"/>
+<text x="384" y="508.5" font-size="12.5" fill="#334B60">⑤ 可判别串加分 —— 同类型同值命中 +≤0.12</text>
+<path d="M338,470 C353,470 353,538 368,538" fill="none" stroke="#7A6BB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="538" r="3" fill="#7A6BB5" opacity="0.7"/>
+<text x="384" y="542.5" font-size="12.5" fill="#334B60">⑥ 没记过判定 —— 专名在库内 DF=0 且 top1&lt;0.75 就判空</text>
+<path d="M338,470 C353,470 353,572 368,572" fill="none" stroke="#7A6BB5" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="572" r="3" fill="#7A6BB5" opacity="0.7"/>
+<text x="384" y="576.5" font-size="12.5" fill="#334B60">⑦ 噪音过滤 —— 绝对底线 / 硬特征 / 长尾 / 平局 + 兄弟豁免</text>
+<path d="M180,470 C213,470 213,690 246,690" fill="none" stroke="#C08A3E" stroke-width="1.6" opacity="0.55"/>
+<rect x="246" y="672" width="92" height="36" rx="8" fill="#FDF9F2" stroke="#C08A3E" stroke-width="1.5"/>
+<text x="292" y="695" font-size="14" font-weight="700" fill="#16324A" text-anchor="middle">治理</text>
+<path d="M338,690 C353,690 353,656 368,656" fill="none" stroke="#C08A3E" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="656" r="3" fill="#C08A3E" opacity="0.7"/>
+<text x="384" y="660.5" font-size="12.5" fill="#334B60">工作区认领 —— 身份指纹认回改名前的旧记忆</text>
+<path d="M338,690 C353,690 353,690 368,690" fill="none" stroke="#C08A3E" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="690" r="3" fill="#C08A3E" opacity="0.7"/>
+<text x="384" y="694.5" font-size="12.5" fill="#334B60">管理台 —— 跨工作区浏览 / 删除 / 搬家</text>
+<path d="M338,690 C353,690 353,724 368,724" fill="none" stroke="#C08A3E" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="724" r="3" fill="#C08A3E" opacity="0.7"/>
+<text x="384" y="728.5" font-size="12.5" fill="#334B60">导入 —— DSH 历史会话一键收进长期记忆</text>
+<path d="M180,470 C213,470 213,830 246,830" fill="none" stroke="#5B7C8F" stroke-width="1.6" opacity="0.55"/>
+<rect x="246" y="812" width="92" height="36" rx="8" fill="#F4F8FA" stroke="#5B7C8F" stroke-width="1.5"/>
+<text x="292" y="835" font-size="14" font-weight="700" fill="#16324A" text-anchor="middle">界面</text>
+<path d="M338,830 C353,830 353,812 368,812" fill="none" stroke="#5B7C8F" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="812" r="3" fill="#5B7C8F" opacity="0.7"/>
+<text x="384" y="816.5" font-size="12.5" fill="#334B60">右上角「记忆」—— 打开全屏面板（徽章是当前工作区条数）</text>
+<path d="M338,830 C353,830 353,850 368,850" fill="none" stroke="#5B7C8F" stroke-width="1.2" opacity="0.35"/>
+<circle cx="373" cy="850" r="3" fill="#5B7C8F" opacity="0.7"/>
+<text x="384" y="854.5" font-size="12.5" fill="#334B60">设置页「记忆」—— 同一个面板的入口；两处都内置，不跳浏览器</text>
+</svg>
