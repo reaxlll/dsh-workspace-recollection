@@ -34,8 +34,8 @@
         "zh": "跨会话记忆"
       },
       "description": {
-        "en": "Cross-session long-term memory, isolated per workspace: one prompt line points at the memory tools; directory, segment locator and vector store are read on demand.",
-        "zh": "按工作区隔离的跨会话长期记忆：prompt 里只放一行指向记忆工具的提示，目录、段级定位与向量库全部按需读取。"
+        "en": "Cross-session long-term memory, isolated per workspace: one prompt line points at the memory tools; directory, segment locator and vector store are read on demand. Ships a self-contained console page (full-screen panel, or its own window) and re-claims a workspace automatically after the folder is renamed.",
+        "zh": "按工作区隔离的跨会话长期记忆：prompt 里只放一行指向记忆工具的提示，目录、段级定位与向量库全部按需读取。自带管理台页面（全屏面板，也能开成独立窗口）；工作区改名后按身份指纹自动认领旧记忆。"
       },
       "icon": "https://cdn.jsdelivr.net/gh/reaxlll/dsh-workspace-recollection@main/assets/icon.svg",
       "author": "reaxlll",
@@ -56,6 +56,18 @@
         ]
       },
       "versions": [
+        {
+          "version": "2.17.0",
+          "publishTimestamp": 1792850313,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/reaxlll/dsh-workspace-recollection",
+            "commit": "8200c8dcc73ac83b1fff749e2c3a520b5bd42fc3"
+          },
+          "engines": {
+            "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+          }
+        },
         {
           "version": "2.8.0",
           "publishTimestamp": 1792668963,
