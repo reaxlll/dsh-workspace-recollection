@@ -17,7 +17,7 @@ cd dsh-workspace-recollection
 # 挂到 DSH（file: 依赖在 profile 里是「拷贝」语义，不是软链）
 dsh plugin --profile desktop add file:$PWD
 
-npm test           # 纯函数单测，118 条，几十毫秒
+npm test           # 纯函数单测，245 条，几百毫秒
 npm run typecheck  # tsc --checkJs（需要先 npm install；CI 也会跑）
 ```
 
@@ -43,8 +43,9 @@ npm run typecheck  # tsc --checkJs（需要先 npm install；CI 也会跑）
 
 | 文件 | 管什么 | 改动风险 | 怎么验证 |
 | --- | --- | --- | --- |
-| `lib/index.js` | 插件定义、8 个工具、注入 section、HTTP 路由、存储与向量读写 | 高（宿主半侧，改完要重启） | 语法 + 离线端到端（第五节） |
-| `lib/client.js` | 浏览器半侧：记忆面板（列表 / 编辑 / 预览注入 / 检索测试） | 中（**绝不能抛错**） | 刷新页面看状态条自报的版本 |
+| `lib/index.js` | 插件定义、9 个工具、注入 section、HTTP 路由与管理台页面、存储与向量读写 | 高（宿主半侧，改完要重启） | 语法 + 离线端到端（第五节） |
+| `lib/client.js` | 浏览器半侧：两个入口（会话头 / 设置页）+ 全屏面板外壳（内容来自 `/page`） | 中（**绝不能抛错**） | 刷新页面看状态条自报的版本 |
+| `assets/console.html` | 管理台页面本体（自包含 HTML，只依赖 `/api/session-memory/*`） | 中 | 点开面板；改完刷新即生效（页面按 mtime 重读） |
 | `lib/noise.js` | 检索噪音过滤 + 排序分层（四路信号 / `scoreEntry` / DF 门槛） | 低（纯函数） | `npm test` + 真实回放 |
 | `lib/segments.js` | 段级引索：切段 + BM25 定位 | 低（纯函数） | `npm test` |
 | `lib/timehint.js` | 时间提示解析（日期 / 相对时间 → 日历日区间） | 低（纯函数） | `npm test` |
